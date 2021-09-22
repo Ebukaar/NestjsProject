@@ -1,0 +1,22 @@
+{
+    "type" : "postgres",
+    "host" : "localhost",
+    "port" : 5433,
+    "username" : "postgres",
+    "password" : "1234",
+    "database" : "internship",
+    "entities" : [
+        "dist/**/*.entity{.ts,.js}"
+    ],
+    "synchronize" : true,
+    "cache" : {
+        "type" : "ioredis",
+        "options" : {
+            "host" : "localhost",
+            "port": 6379,
+            "timeout" : 10000,
+            "database": 6
+        }
+      
+    }
+}   
