@@ -3,6 +3,7 @@ import { Column, Entity, Index, JoinColumn, ManyToMany, ManyToOne, OneToOne, Pri
 import { UserProfile } from "src/user-profiles/entities/user-profile.entity";
 import { Department } from "src/departments/entities/department.entity";
 import { Role } from "src/roles/entities/role.entity";
+import { Employee } from "src/employees/entities/employee.entity";
 
 @Entity()
 export class User {
@@ -110,15 +111,13 @@ export class User {
 
 
 
-    @Column({nullable: true})
-    departmentId: number;
-
-    @ManyToOne(()=> Department, department => department.users)
-    @JoinColumn({name: 'departmentId'})
-    //Department is the type for department
-    department: Department;
 
 
     @ManyToMany(()=>Role, role=> role.users)
     roles: Role[];
+
+    @OneToOne(()=>Employee, employee => employee.user)
+    employee: Employee;
+
+    
 }

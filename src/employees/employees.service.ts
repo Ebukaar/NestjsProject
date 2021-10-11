@@ -123,14 +123,14 @@ export class EmployeesService {
 
   //Relationships
 
-  async addDepartmentById(employeeId: number, departmentId: number): Promise<void> {
+  async setDepartmentById(employeeId: number, departmentId: number): Promise<void> {
 
     try{
 
       return await this.employeeRepository.createQueryBuilder()
       .relation(Employee, 'department')
       .of(employeeId)
-      .add(departmentId)
+      .set(departmentId)
 
     }catch(error){
 
@@ -145,14 +145,14 @@ export class EmployeesService {
   }
 
 
-  async removeDepartmentById(employeeId: number, departmentId: number): Promise<void> {
+  async unsetDepartmentById(employeeId: number): Promise<void> {
 
     try{
 
       return await this.employeeRepository.createQueryBuilder()
       .relation(Employee, 'department')
       .of(employeeId)
-      .remove(departmentId)
+      .set(null)
 
     }catch(error){
 

@@ -4,7 +4,8 @@ import { UsersService } from './users.service';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from './entities/user.entity';
 import { CreateUserDto } from './dto/create-user.dto';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiBadRequestResponse, ApiInternalServerErrorResponse, ApiOkResponse, ApiQuery, ApiTags, getSchemaPath } from '@nestjs/swagger';
+import { query } from 'express';
 
 
 @ApiTags('users')
@@ -13,13 +14,28 @@ export class UsersController {
   constructor(private readonly usersService: UsersService) { }
 
 
+  @ApiBadRequestResponse({ description: "Bad request: constraint problem" })
+    @ApiInternalServerErrorResponse({ description: 'Internal server error' })
+  @ApiOkResponse(
+    {
+        description: "User successfully created",
+        schema: {
+            type: 'object',
+            $ref: getSchemaPath(User)
+        }
+    })
   @Post()
   create(@Body() createUserDto: CreateUserDto, @Req() req: any): Promise<User> {
     return this.usersService.create(createUserDto, req);
   }
 
 
-
+/**
+ * Find users based on options provided in query. The query key expected is find-options.
+ * @param query 
+ * @returns 
+ */
+ @ApiQuery({ name: 'find-options', required: false, description: 'encodeURI(JSON.stringify({select?: string[]; relations?: string[]; skip?: number; take?: number;cache?: boolean; where?: {}[] | {}; order?: {};))' })
   @Get()
   //It is a get because we are not posting
   findAll(@Query() query: string): Promise<[User[], number]> {
@@ -67,5 +83,50 @@ export class UsersController {
 
 
   }
+
+  @Delete(':userId/roles/:roleId')
+  removeRoleById(@Param('userId') userId: string, @Param('roleId') roleId: string): Promise<void> {
+
+    return this.usersService.removeRoleById(+userId, +roleId)
+
+  }
+
+
+  @Delete(':userId/roles')
+  removeRolesById(@Param('userId') userId: string, @Query() query: string ): Promise<void> {
+
+    return this.usersService.removeRolesById(+userId, query['roleid'])
+
+  }
+
+  @Patch(':userId/user-profile/:userProfileId')
+  setUserProfileById(@Param('userId') userId: string, @Param('userProfile') userProfileId: string ): Promise<void> {
+
+    return this.usersService.setUserProfileById(+userId, +userProfileId)
+
+  }
+
+  @Delete(':userId/user-profile')
+  unsetUserProfileById(@Param('userId') userId: string): Promise<void> {
+
+    return this.usersService.unsetUserProfileById(+userId)
+
+  }
+
+
+  @Patch(':userId/employee/:employeeId')
+  setEmployeeById(@Param('userId') userId: string , @Param('employeeId') employeeId: string): Promise<void> {
+
+    return this.usersService.setEmployeeById(+userId, +employeeId)
+
+  }
+
+  @Delete(':userId/employee')
+  unsetEmployeeById(@Param('userId') userId: string): Promise<void> {
+
+    return this.usersService.unsetEmployeeById(+userId)
+
+  }
+
 
 }

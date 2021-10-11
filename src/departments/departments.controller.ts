@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { DepartmentsService } from './departments.service';
 import { CreateDepartmentDto } from './dto/create-department.dto';
@@ -37,5 +37,36 @@ export class DepartmentsController {
   }
 
   /**Let's work on relationships */
+
+  // ?employeeid=1&employeeid=2&employeeid=5
+  @Patch(':departmentId/employees')
+  addEmployeesById(@Param('departmentId') departmentId: string, @Query() query: string): Promise<void> {
+
+    return this.departmentsService.addEmployeesById(+departmentId, query['employeeid'])
+
+  }
   
+  @Patch(':departmentId/employees/:employeeId')
+  addEmployeeById(@Param('departmentId') departmentId: string, @Param('employeeId') employeeId: string): Promise<void> {
+
+    return this.departmentsService.addEmployeeById(+departmentId, +employeeId)
+
+  }
+
+  @Delete(':departmentId/employees/:employeeId')
+  removeEmployeeById(@Param('departmentId') departmentId: string, @Param('employeeId') employeeId: string): Promise<void> {
+
+    return this.departmentsService.removeEmployeeById(+departmentId, +employeeId)
+
+  }
+
+  @Delete(':departmentId/employees')
+  removeEmployeesById(@Param('departmentId') departmentId: string, @Query() query: string): Promise<void> {
+
+    return this.departmentsService.removeEmployeesById(+departmentId, query['employeeid'])
+
+  }
+
+
+ 
 }

@@ -271,7 +271,7 @@ export class UsersService {
 
       throw new HttpException({
         status: HttpStatus.INTERNAL_SERVER_ERROR,
-        error: `There was a problem adding user-profile with user Id: ${error.message}`
+        error: `There was a problem setting user-profile with user Id: ${error.message}`
       }, HttpStatus.INTERNAL_SERVER_ERROR)
 
 
@@ -290,7 +290,47 @@ export class UsersService {
 
       throw new HttpException({
         status: HttpStatus.INTERNAL_SERVER_ERROR,
-        error: `There was a problem deleting user-profile with user Id: ${error.message}`
+        error: `There was a problem unsetting user-profile with user Id: ${error.message}`
+      }, HttpStatus.INTERNAL_SERVER_ERROR)
+
+
+    }
+  }
+
+
+
+  async setEmployeeById(userId: number, employeeId: number): Promise<void> {
+    try {
+
+      return await this.userRepository.createQueryBuilder()
+        .relation(User, "employee")
+        .of(userId) 
+        .set(employeeId)
+
+    } catch (error) { 
+
+      throw new HttpException({
+        status: HttpStatus.INTERNAL_SERVER_ERROR,
+        error: `There was a problem setting employee with user Id: ${error.message}`
+      }, HttpStatus.INTERNAL_SERVER_ERROR)
+
+
+    }
+  }
+
+  async unsetEmployeeById(userId: number): Promise<void> {
+    try {
+
+      return await this.userRepository.createQueryBuilder()
+        .relation(User, "employee")
+        .of(userId) 
+        .set(null)
+
+    } catch (error) {
+
+      throw new HttpException({
+        status: HttpStatus.INTERNAL_SERVER_ERROR,
+        error: `There was a problem unsetting employee with user Id: ${error.message}`
       }, HttpStatus.INTERNAL_SERVER_ERROR)
 
 

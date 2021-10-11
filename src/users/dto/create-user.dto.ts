@@ -4,6 +4,7 @@ import { CountryList, Gender } from "../../global/app.enum";
 
 export class CreateUserDto {
 
+    @ApiProperty()
     /**
      * This is the first name of the user. Should not be more than 20 characters. 
      * @example 'Ebuka'
